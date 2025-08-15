@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechStore - Productos de TI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .barcode {
+            background: repeating-linear-gradient(
+                90deg,
+                #000 0px,
+                #000 2px,
+                #fff 2px,
+                #fff 4px
+            );
+            height: 80px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <i class="fas fa-laptop text-3xl"></i>
+                    <h1 class="text-2xl font-bold">TechStore</h1>
+                </div>
+                
+                <nav class="hidden md:flex space-x-6">
+                    <a href="#info" class="hover:text-gray-200 transition">Información</a>
+                    <a href="#catalogo" class="hover:text-gray-200 transition">Catálogo</a>
+                    <a href="#contacto" class="hover:text-gray-200 transition">Contacto</a>
+                </nav>
+                
+                <div class="flex items-center space-x-4">
+                    <button id="loginBtn" class="bg-white text-purple-600 px-4 py-2 rounded-lg hover:bg-gray-100 transition">
+                        <i class="fas fa-user mr-2"></i>Iniciar Sesión
+                    </button>
+                    <div class="relative">
+                        <button id="cartBtn" class="text-white hover:text-gray-200 transition">
+                            <i class="fas fa-shopping-cart text-xl"></i>
+                            <span id="cartBadge" class="cart-badge hidden">0</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="bg-white py-20">
+        <div class="container mx-auto px-4 text-center">
+            <div class="hero-image mb-8">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/8c41bc4c-6bf1-4e79-9e6a-2072c1ad4bca.png" alt="Modern technology workspace with multiple monitors, laptops, and IT equipment arranged on a sleek desk with LED lighting and futuristic design elements" class="mx-auto rounded-lg shadow-lg"/>
+            </div>
+            <h2 class="text-5xl font-bold text-gray-800 mb-6">Tecnología de Vanguardia</h2>
+            <p class="text-xl text-gray-600 mb-8">Los mejores productos de TI para profesionales y empresas</p>
+            <button class="bg-purple-600 text-white px-8 py-4 rounded-lg text-lg hover:bg-purple-700 transition">
+                Explorar Productos
+            </button>
+        </div>
+    </section>
+
+    <!-- Información de la Página -->
+    <section id="info" class="py-16 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <h3 class="text-3xl font-bold text-center mb-12">¿Por qué elegir TechStore?</h3>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-lg shadow-lg text-center">
+                    <i class="fas fa-shield-alt text-4xl text-purple-600 mb-4"></i>
+                    <h4 class="text-xl font-semibold mb-4">Productos Certificados</h4>
+                    <p class="text-gray-600">Todos nuestros productos cuentan con garantía oficial y certificaciones internacionales de calidad.</p>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg text-center">
+                    <i class="fas fa-shipping-fast text-4xl text-purple-600 mb-4"></i>
+                    <h4 class="text-xl font-semibold mb-4">Envío Rápido</h4>
+                    <p class="text-gray-600">Entrega en 24-48 horas en área metropolitana. Envíos seguros a todo el país.</p>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg text-center">
+                    <i class="fas fa-headset text-4xl text-purple-600 mb-4"></i>
+                    <h4 class="text-xl font-semibold mb-4">Soporte 24/7</h4>
+                    <p class="text-gray-600">Equipo técnico especializado disponible las 24 horas para resolver tus dudas.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Catálogo de Productos -->
+    <section id="catalogo" class="py-16">
+        <div class="container mx-auto px-4">
+            <h3 class="text-3xl font-bold text-center mb-12">Nuestro Catálogo</h3>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="productGrid">
+                <!-- Los productos se cargarán dinámicamente -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal de Login/Registro -->
+    <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="bg-white rounded-lg p-8 max-w-md w-full">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold">Iniciar Sesión</h3>
+                    <button id="closeModal" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <div id="loginForm">
+                    <form id="loginFormElement">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                            <input type="email" id="loginEmail" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-purple-500" required>
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Contraseña</label>
+                            <input type="password" id="loginPassword" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-purple-500" required>
+                        </div>
+                        <button type="submit" class="w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition">
+                            Iniciar Sesión
+                        </button>
+                    </form>
+                    <p class="text-center mt-4">
+                        ¿No tienes cuenta? 
+                        <button id="showRegister" class="text-purple-600 hover:underline">Regístrate</button>
+                    </p>
+                </div>
+                
+                <div id="registerForm" class="hidden">
+                    <form id="registerFormElement">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Nombre Completo</label>
+                            <input type="text" id="registerName" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-purple-500" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                            <input type="email" id="registerEmail" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-purple-500" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Dirección</label>
+                            <textarea id="registerAddress" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-purple-500" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Contraseña</label>
+                            <input type="password" id="registerPassword" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-purple-500" required>
+                        </div>
+                        <button type="submit" class="w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition">
+                            Registrarse
+                        </button>
+                    </form>
+                    <p class="text-center mt-4">
+                        ¿Ya tienes cuenta? 
+                        <button id="showLogin" class="text-purple-600 hover:underline">Inicia Sesión</button>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal del Carrito -->
+    <div id="cartModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="bg-white rounded-lg p-8 max-w-2xl w-full max-h-screen overflow-y-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold">Carrito de Compras</h3>
+                    <button id="closeCartModal" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <div id="cartItems">
+                    <!-- Los items del carrito se cargarán aquí -->
+                </div>
+                
+                <div class="border-t pt-4 mt-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-xl font-bold">Total:</span>
+                        <span id="cartTotal" class="text-xl font-bold text-purple-600">$0</span>
+                    </div>
+                    <button id="checkoutBtn" class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition">
+                        Proceder al Pago
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Checkout -->
+    <div id="checkoutModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="bg-white rounded-lg p-8 max-w-md w-full">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold">Método de Pago</h3>
+                    <button id="closeCheckoutModal" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <div class="space-y-4">
+                    <button id="cardPayment" class="w-full p-4 border-2 border-gray-200 rounded-lg hover:border-purple-500 transition">
+                        <i class="fas fa-credit-card text-2xl text-purple-600 mb-2"></i>
+                        <div class="font-semibold">Tarjeta de Crédito/Débito</div>
+                    </button>
+                    
+                    <button id="cashPayment" class="w-full p-4 border-2 border-gray-200 rounded-lg hover:border-purple-500 transition">
+                        <i class="fas fa-money-bill-wave text-2xl text-green-600 mb-2"></i>
+                        <div class="font-semibold">Pago en Efectivo</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Pago con Tarjeta -->
+    <div id="cardPaymentModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="bg-white rounded-lg p-8 max-w-md w-full">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold">Pago con Tarjeta</h3>
+                    <button id="closeCardModal" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <form id="cardForm">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Número de Tarjeta</label>
+                        <input type="text" id="cardNumber" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-purple-500" placeholder="1234 5678 9012 3456" required>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Fecha de Vencimiento</label>
+                            <input type="text" id="cardExpiry" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-purple-500" placeholder="MM/YY" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2">CVV</label>
+                            <input type="text" id="cardCVV" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-purple-500" placeholder="123" required>
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Nombre del Titular</label>
+                        <input type="text" id="cardName" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-purple-500" placeholder="Juan Pérez" required>
+                    </div>
+                    <button type="submit" class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition">
+                        Pagar Ahora
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Pago en Efectivo -->
+    <div id="cashPaymentModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="bg-white rounded-lg p-8 max-w-md w-full">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold">Pago en Efectivo</h3>
+                    <button id="closeCashModal" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <div class="text-center">
+                    <div class="mb-6">
+                        <div class="barcode mb-4"></div>
+                        <p class="text-2xl font-bold" id="barcodeNumber">1234567890123</p>
+                    </div>
+                    
+                    <p class="text-gray-600 mb-4">
+                        Presenta este código de barras en cualquier tienda afiliada para realizar tu pago.
+                    </p>
+                    
+                    <div class="bg-yellow-100 p-4 rounded-lg mb-6">
+                        <p class="text-sm text-yellow-800">
+                            <i class="fas fa-exclamation-triangle mr-2"></i>
+                            Tienes 48 horas para realizar el pago. Después de este tiempo, el pedido será cancelado.
+                        </p>
+                    </div>
+                    
+                    <button id="confirmCashPayment" class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition">
+                        Confirmar Pedido
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación -->
+    <div id="confirmationModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="bg-white rounded-lg p-8 max-w-md w-full text-center">
+                <i class="fas fa-check-circle text-6xl text-green-500 mb-4"></i>
+                <h3 class="text-2xl font-bold mb-4">¡Compra Exitosa!</h3>
+                <p class="text-gray-600 mb-6">
+                    Se ha enviado un correo de confirmación con los detalles de tu pedido.
+                </p>
+                <button id="closeConfirmation" class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer id="contacto" class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-3 gap-8">
+                <div>
+                    <h4 class="text-xl font-bold mb-4">TechStore</h4>
+                    <p class="text-gray-400">Tu tienda de confianza para productos de tecnología e informática.</p>
+                </div>
+                <div>
+                    <h4 class="text-xl font-bold mb-4">Contacto</h4>
+                    <p class="text-gray-400 mb-2"><i class="fas fa-phone mr-2"></i>+1 234 567 8900</p>
+                    <p class="text-gray-400 mb-2"><i class="fas fa-envelope mr-2"></i>info@techstore.com</p>
+                    <p class="text-gray-400"><i class="fas fa-map-marker-alt mr-2"></i>123 Tech Street, Ciudad</p>
+                </div>
+                <div>
+                    <h4 class="text-xl font-bold mb-4">Síguenos</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram text-xl"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+                <p class="text-gray-400">© 2024 TechStore. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Variables globales
+        let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+
+        // Productos de TI
+        const products = [
+            {
+                id: 1,
+                name: "Laptop Gaming ROG",
+                price: 1299,
+                description: "Laptop gaming de alta gama con RTX 4060",
+                image: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/aeec8c6e-edd5-4b02-a1aa-fe8c0e4d7e91.png",
+                alt: "High-end gaming laptop with RGB keyboard backlight, sleek black design, and modern screen displaying gaming interface"
+            },
+            {
+                id: 2,
+                name: "Monitor 4K 27\"",
+                price: 399,
+                description: "Monitor profesional 4K con HDR",
+                image: "/mini.jpg",
+                alt: "Professional 27-inch 4K monitor with thin bezels displaying vibrant colors and crisp resolution on a modern desk setup"
+            },
+            {
+                id: 3,
+                name: "Teclado Mecánico RGB",
+                price: 149,
+                description: "Teclado mecánico para gaming con switches Cherry MX",
+                image: "/teclado.jpg",
+                alt: "Mechanical gaming keyboard with colorful RGB lighting, black frame, and Cherry MX key switches visible"
+            },
+            {
+                id: 4,
+                name: "Mouse Gaming Wireless",
+                price: 89,
+                description: "Mouse inalámbrico de alta precisión",
+                image: "/m2.jpg",
+                alt: "Wireless gaming mouse with ergonomic design, LED lighting accents, and precision sensor visible on gaming mousepad"
+            },
+            {
+                id: 5,
+                name: "SSD NVMe 1TB",
+                price: 159,
+                description: "Disco sólido NVMe de alta velocidad",
+                image: "/ssd2.png",
+                alt: "High-speed NVMe SSD drive with heat spreader, metallic finish, and performance specifications label clearly visible"
+            },
+            {
+                id: 6,
+                name: "Tarjeta Gráfica RTX 4070",
+                price: 599,
+                description: "GPU de última generación para gaming",
+                image: "tarjeta.jpg",
+                alt: "NVIDIA RTX 4070 graphics card with dual-fan cooling system, metallic backplate, and RGB lighting elements"
+            }
+        ];
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProducts();
+            updateCartUI();
+            updateUserUI();
+            setupEventListeners();
+        });
+
+        // Cargar productos en el catálogo
+        function loadProducts() {
+            const productGrid = document.getElementById('productGrid');
+            productGrid.innerHTML = '';
+
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card bg-white rounded-lg shadow-lg overflow-hidden transition-all duration-300';
+                productCard.innerHTML = `
+                    <div class="relative">
+                        <img src="${product.image}" alt="${product.alt}" class="w-full h-48 object-cover"/>
+                        <div class="absolute top-4 right-4">
+                            <button onclick="addToCart(${product.id})" class="bg-purple-600 text-white p-2 rounded-full hover:bg-purple-700 transition">
+                                <i class="fas fa-cart-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="text-xl font-semibold mb-2">${product.name}</h4>
+                        <p class="text-gray-600 mb-4">${product.description}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-2xl font-bold text-purple-600">$${product.price}</span>
+                            <button onclick="addToCart(${product.id})" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition">
+                                Agregar
+                            </button>
+                        </div>
+                    </div>
+                `;
+                productGrid.appendChild(productCard);
+            });
+        }
+
+        // Configurar event listeners
+        function setupEventListeners() {
+            // Modal de login
+            document.getElementById('loginBtn').addEventListener('click', () => {
+                document.getElementById('loginModal').classList.remove('hidden');
+            });
+
+            document.getElementById('closeModal').addEventListener('click', () => {
+                document.getElementById('loginModal').classList.add('hidden');
+            });
+
+            // Cambiar entre login y registro
+            document.getElementById('showRegister').addEventListener('click', () => {
+                document.getElementById('loginForm').classList.add('hidden');
+                document.getElementById('registerForm').classList.remove('hidden');
+            });
+
+            document.getElementById('showLogin').addEventListener('click', () => {
+                document.getElementById('registerForm').classList.add('hidden');
+                document.getElementById('loginForm').classList.remove('hidden');
+            });
+
+            // Forms
+            document.getElementById('loginFormElement').addEventListener('submit', handleLogin);
+            document.getElementById('registerFormElement').addEventListener('submit', handleRegister);
+
+            // Carrito
+            document.getElementById('cartBtn').addEventListener('click', () => {
+                document.getElementById('cartModal').classList.remove('hidden');
+                loadCartItems();
+            });
+
+            document.getElementById('closeCartModal').addEventListener('click', () => {
+                document.getElementById('cartModal').classList.add('hidden');
+            });
+
+            // Checkout
+            document.getElementById('checkoutBtn').addEventListener('click', handleCheckout);
+            
+            // Payment modals
+            document.getElementById('closeCheckoutModal').addEventListener('click', () => {
+                document.getElementById('checkoutModal').classList.add('hidden');
+            });
+
+            document.getElementById('cardPayment').addEventListener('click', () => {
+                document.getElementById('checkoutModal').classList.add('hidden');
+                document.getElementById('cardPaymentModal').classList.remove('hidden');
+            });
+
+            document.getElementById('cashPayment').addEventListener('click', () => {
+                document.getElementById('checkoutModal').classList.add('hidden');
+                document.getElementById('cashPaymentModal').classList.remove('hidden');
+                generateBarcode();
+            });
+
+            document.getElementById('closeCardModal').addEventListener('click', () => {
+                document.getElementById('cardPaymentModal').classList.add('hidden');
+            });
+
+            document.getElementById('closeCashModal').addEventListener('click', () => {
+                document.getElementById('cashPaymentModal').classList.add('hidden');
+            });
+
+            document.getElementById('cardForm').addEventListener('submit', handleCardPayment);
+            document.getElementById('confirmCashPayment').addEventListener('click', handleCashPayment);
+
+            document.getElementById('closeConfirmation').addEventListener('click', () => {
+                document.getElementById('confirmationModal').classList.add('hidden');
+            });
+        }
+
+        // Manejar login
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            const user = users.find(u => u.email === email && u.password === password);
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                document.getElementById('loginModal').classList.add('hidden');
+                updateUserUI();
+                alert('¡Bienvenido de vuelta!');
+            } else {
+                alert('Credenciales incorrectas');
+            }
+        }
+
+        // Manejar registro
+        function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const address = document.getElementById('registerAddress').value;
+            const password = document.getElementById('registerPassword').value;
+
+            if (users.find(u => u.email === email)) {
+                alert('El email ya está registrado');
+                return;
+            }
+
+            const newUser = {
+                id: Date.now(),
+                name,
+                email,
+                address,
+                password
+            };
+
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            currentUser = newUser;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            document.getElementById('loginModal').classList.add('hidden');
+            updateUserUI();
+            alert('¡Cuenta creada exitosamente!');
+        }
+
+        // Actualizar UI del usuario
+        function updateUserUI() {
+            const loginBtn = document.getElementById('loginBtn');
+            if (currentUser) {
+                loginBtn.innerHTML = `<i class="fas fa-user mr-2"></i>${currentUser.name}`;
+                loginBtn.onclick = () => {
+                    if (confirm('¿Deseas cerrar sesión?')) {
+                        currentUser = null;
+                        localStorage.removeItem('currentUser');
+                        updateUserUI();
+                    }
+                };
+            } else {
+                loginBtn.innerHTML = `<i class="fas fa-user mr-2"></i>Iniciar Sesión`;
+                loginBtn.onclick = () => {
+                    document.getElementById('loginModal').classList.remove('hidden');
+                };
+            }
+        }
+
+        // Agregar al carrito
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const existingItem = cart.find(item => item.id === productId);
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    ...product,
+                    quantity: 1
+                });
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartUI();
+            showNotification('Producto agregado al carrito');
+        }
+
+        // Actualizar UI del carrito
+        function updateCartUI() {
+            const cartBadge = document.getElementById('cartBadge');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            
+            if (totalItems > 0) {
+                cartBadge.textContent = totalItems;
+                cartBadge.classList.remove('hidden');
+            } else {
+                cartBadge.classList.add('hidden');
+            }
+        }
+
+        // Cargar items del carrito
+        function loadCartItems() {
+            const cartItems = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p class="text-center text-gray-500 py-8">Tu carrito está vacío</p>';
+                cartTotal.textContent = '$0';
+                return;
+            }
+
+            let total = 0;
+            cartItems.innerHTML = '';
+
+            cart.forEach(item => {
+                total += item.price * item.quantity;
+                const cartItem = document.createElement('div');
+                cartItem.className = 'flex items-center justify-between border-b pb-4 mb-4';
+                cartItem.innerHTML = `
+                    <div class="flex items-center space-x-4">
+                        <img src="${item.image}" alt="${item.alt}" class="w-16 h-16 object-cover rounded"/>
+                        <div>
+                            <h4 class="font-semibold">${item.name}</h4>
+                            <p class="text-gray-600">$${item.price}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="updateQuantity(${item.id}, -1)" class="bg-gray-200 px-2 py-1 rounded">-</button>
+                        <span class="mx-2">${item.quantity}</span>
+                        <button onclick="updateQuantity(${item.id}, 1)" class="bg-gray-200 px-2 py-1 rounded">+</button>
+                        <button onclick="removeFromCart(${item.id})" class="text-red-500 ml-4">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                cartItems.appendChild(cartItem);
+            });
+
+            cartTotal.textContent = `$${total}`;
+        }
+
+        // Actualizar cantidad
+        function updateQuantity(productId, change) {
+            const item = cart.find(item => item.id === productId);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    removeFromCart(productId);
+                } else {
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    loadCartItems();
+                    updateCartUI();
+                }
+            }
+        }
+
+        // Remover del carrito
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            loadCartItems();
+            updateCartUI();
+        }
+
+        // Manejar checkout
+        function handleCheckout() {
+            if (!currentUser) {
+                alert('Debes iniciar sesión para realizar una compra');
+                document.getElementById('cartModal').classList.add('hidden');
+                document.getElementById('loginModal').classList.remove('hidden');
+                return;
+            }
+
+            if (cart.length === 0) {
+                alert('Tu carrito está vacío');
+                return;
+            }
+
+            document.getElementById('cartModal').classList.add('hidden');
+            document.getElementById('checkoutModal').classList.remove('hidden');
+        }
+
+        // Generar código de barras
+        function generateBarcode() {
+            const barcodeNumber = Math.floor(Math.random() * 9000000000000) + 1000000000000;
+            document.getElementById('barcodeNumber').textContent = barcodeNumber;
+        }
+
+        // Manejar pago con tarjeta
+        function handleCardPayment(e) {
+            e.preventDefault();
+            
+            // Simulación de procesamiento de pago
+            setTimeout(() => {
+                completePurchase();
+                document.getElementById('cardPaymentModal').classList.add('hidden');
+            }, 2000);
+        }
+
+        // Manejar pago en efectivo
+        function handleCashPayment() {
+            completePurchase();
+            document.getElementById('cashPaymentModal').classList.add('hidden');
+        }
+
+        // Completar compra
+        function completePurchase() {
+            const order = {
+                id: Date.now(),
+                user: currentUser,
+                items: [...cart],
+                total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+                date: new Date().toISOString(),
+                status: 'confirmed'
+            };
+
+            // Guardar orden
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            orders.push(order);
+            localStorage.setItem('orders', JSON.stringify(orders));
+
+            // Enviar correo de confirmación (simulado)
+            sendConfirmationEmail(order);
+
+            // Limpiar carrito
+            cart = [];
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartUI();
+
+            // Mostrar confirmación
+            document.getElementById('confirmationModal').classList.remove('hidden');
+        }
+
+        // Enviar correo de confirmación (simulado)
+        function sendConfirmationEmail(order) {
+            console.log('Enviando correo de confirmación a:', currentUser.email);
+            console.log('Detalles del pedido:', order);
+            
+            // En una aplicación real, aquí se enviaría el correo
+            const emailContent = `
+                Estimado/a ${currentUser.name},
+                
+                Gracias por tu compra en TechStore.
+                
+                Detalles del pedido #${order.id}:
+                ${order.items.map(item => `- ${item.name} x${item.quantity} - $${item.price * item.quantity}`).join('\n')}
+                
+                Total: $${order.total}
+                
+                Tu pedido será enviado a: ${currentUser.address}
+                
+                Gracias por confiar en nosotros.
+                
+                Equipo TechStore
+            `;
+            
+            alert('Correo de confirmación enviado a: ' + currentUser.email);
+        }
+
+        // Mostrar notificación
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Smooth scrolling para navegación
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
